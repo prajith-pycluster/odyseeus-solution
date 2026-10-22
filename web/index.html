@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConnectX Telecom | Customer Portal & Support Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at 15% 15%, #0f172a 0%, #020617 100%);
+      --surface: rgba(15, 23, 42, 0.75);
+      --surface-border: rgba(255, 255, 255, 0.08);
+      --surface-hover: rgba(30, 41, 59, 0.85);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-glow: rgba(99, 102, 241, 0.35);
+      --accent: #06b6d4;
+      --accent-glow: rgba(6, 182, 212, 0.3);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --user-bubble: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+      --bot-bubble: rgba(30, 41, 59, 0.85);
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Header Nav */
+    header {
+      backdrop-filter: blur(16px);
+      background: rgba(15, 23, 42, 0.6);
+      border-bottom: 1px solid var(--surface-border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav-container {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #6366f1, #06b6d4);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: #fff;
+      box-shadow: 0 0 16px var(--primary-glow);
+    }
+
+    .brand-text {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 40%, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-badges {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.85rem;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #34d399;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.9); }
+    }
+
+    .backend-tag {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--surface-border);
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1380px;
+      margin: 1.5rem auto;
+      padding: 0 1.5rem;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 1.75rem;
+      width: 100%;
+    }
+
+    @media (max-width: 1024px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Left Sidebar: Account & Plans */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--surface);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      opacity: 0.8;
+    }
+
+    .card-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .customer-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .avatar-circle {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, #ec4899, #8b5cf6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(236, 72, 153, 0.3);
+    }
+
+    .customer-details h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .customer-details p {
+      font-size: 0.825rem;
+      color: var(--text-muted);
+    }
+
+    .account-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+    }
+
+    .stat-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--surface-border);
+      padding: 0.85rem;
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
+    }
+
+    .stat-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-value {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .highlight-val {
+      color: #38bdf8;
+      font-size: 1.1rem;
+    }
+
+    /* Available Plans Section */
+    .plans-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .plan-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+
+    .plan-card.current {
+      border-color: rgba(99, 102, 241, 0.5);
+      background: rgba(99, 102, 241, 0.08);
+      position: relative;
+    }
+
+    .plan-info h4 {
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .plan-price {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #38bdf8;
+    }
+
+    .badge-curr {
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 9999px;
+      margin-left: 0.5rem;
+    }
+
+    /* Right: Support Chatbot Panel */
+    .chat-panel {
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      height: 720px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .chat-header {
+      padding: 1.15rem 1.5rem;
+      background: rgba(30, 41, 59, 0.5);
+      border-bottom: 1px solid var(--surface-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .bot-identity {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .bot-avatar {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #06b6d4, #6366f1);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
+
+    .bot-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .bot-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--surface-border);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.5rem 0.9rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--text-main);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Messages Stream */
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      scroll-behavior: smooth;
+    }
+
+    .chat-messages::-webkit-scrollbar {
+      width: 6px;
+    }
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+
+    .message {
+      display: flex;
+      flex-direction: column;
+      max-width: 80%;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.user {
+      align-self: flex-end;
+      align-items: flex-end;
+    }
+
+    .message.bot {
+      align-self: flex-start;
+      align-items: flex-start;
+    }
+
+    .msg-sender {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+      padding: 0 0.4rem;
+    }
+
+    .bubble {
+      padding: 0.9rem 1.15rem;
+      border-radius: 18px;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      position: relative;
+      word-break: break-word;
+    }
+
+    .message.user .bubble {
+      background: var(--user-bubble);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+      box-shadow: 0 4px 16px var(--primary-glow);
+    }
+
+    .message.bot .bubble {
+      background: var(--bot-bubble);
+      border: 1px solid var(--surface-border);
+      color: #e2e8f0;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Tag badge for scope classification */
+    .scope-tag {
+      display: inline-block;
+      margin-top: 0.4rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .tag-IN_SCOPE {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .tag-COMPETITOR {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .tag-PERSONAL {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .tag-UNRELATED {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    /* Typing indicator */
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0.8rem 1.1rem;
+      background: var(--bot-bubble);
+      border: 1px solid var(--surface-border);
+      border-radius: 18px;
+      border-bottom-left-radius: 4px;
+      width: fit-content;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      background: #94a3b8;
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+
+    .dot:nth-child(1) { animation-delay: -0.32s; }
+    .dot:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0); opacity: 0.4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Test Prompts Carousel / Chips */
+    .chips-section {
+      padding: 0.65rem 1.25rem;
+      background: rgba(15, 23, 42, 0.4);
+      border-top: 1px solid var(--surface-border);
+      border-bottom: 1px solid var(--surface-border);
+      overflow-x: auto;
+      white-space: nowrap;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .chips-section::-webkit-scrollbar {
+      height: 4px;
+    }
+    .chips-section::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .chip-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--surface-border);
+      color: #cbd5e1;
+      padding: 0.38rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .chip-btn:hover {
+      background: rgba(99, 102, 241, 0.18);
+      border-color: rgba(99, 102, 241, 0.4);
+      color: #fff;
+    }
+
+    .chip-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      align-self: center;
+      margin-right: 0.25rem;
+      font-weight: 600;
+    }
+
+    /* Chat Input Area */
+    .chat-input-area {
+      padding: 1rem 1.5rem;
+      background: rgba(30, 41, 59, 0.4);
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .input-box {
+      flex: 1;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1.15rem;
+      color: var(--text-main);
+      font-size: 0.92rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .input-box:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+    }
+
+    .btn-send {
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      border: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.85rem 1.4rem;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+
+    .btn-send:hover {
+      background: linear-gradient(135deg, #4f46e5, #4338ca);
+      transform: translateY(-1px);
+    }
+
+    .btn-send:active {
+      transform: translateY(0);
+    }
+
+    .btn-send:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header>
+    <div class="nav-container">
+      <div class="brand">
+        <div class="brand-icon">CX</div>
+        <div>
+          <div class="brand-text">ConnectX Telecom</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: -2px;">Customer Support Assistant</div>
+        </div>
+      </div>
+      <div class="nav-badges">
+        <span class="status-pill">
+          <span class="status-dot"></span>
+          <span>Assistant Online</span>
+        </span>
+        <span class="backend-tag" id="backendTag">Backend: Loading...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid -->
+  <main>
+    <!-- Left Column: Customer Account & Plan Details -->
+    <div class="sidebar">
+      <!-- Account Info Card -->
+      <div class="card">
+        <div class="card-title">
+          <span>Customer Account</span>
+          <span style="font-size: 0.75rem; color: #38bdf8; font-weight: 600; text-transform: uppercase;">Verified</span>
+        </div>
+
+        <div class="customer-header">
+          <div class="avatar-circle">PS</div>
+          <div class="customer-details">
+            <h3 id="accName">Priya Sharma</h3>
+            <p id="accPlan">ConnectX Pro — 150 Mbps</p>
+          </div>
+        </div>
+
+        <div class="account-grid">
+          <div class="stat-item">
+            <div class="stat-label">Monthly Charge</div>
+            <div class="stat-value highlight-val" id="accCharge">₹999</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Account Status</div>
+            <div class="stat-value" style="color: #34d399;" id="accStatus">Active</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Billing Cycle</div>
+            <div class="stat-value" id="accCycle">1st of every month</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Last Bill</div>
+            <div class="stat-value" id="accLastBill">₹999 (paid)</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Local Network Outages</div>
+            <div class="stat-value" style="color: #34d399;" id="accOutages">None in your area</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Contract End</div>
+            <div class="stat-value" id="accContract">March 2026</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Available Plans Card -->
+      <div class="card">
+        <div class="card-title">
+          <span>Available ConnectX Plans</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Upgrade Options</span>
+        </div>
+        <div class="plans-list" id="plansList">
+          <div class="plan-card">
+            <div class="plan-info">
+              <h4>ConnectX Basic — 50 Mbps</h4>
+            </div>
+            <div class="plan-price">₹599/mo</div>
+          </div>
+          <div class="plan-card current">
+            <div class="plan-info">
+              <h4>ConnectX Pro — 150 Mbps <span class="badge-curr">Current</span></h4>
+            </div>
+            <div class="plan-price">₹999/mo</div>
+          </div>
+          <div class="plan-card">
+            <div class="plan-info">
+              <h4>ConnectX Max — 300 Mbps</h4>
+            </div>
+            <div class="plan-price">₹1,399/mo</div>
+          </div>
+          <div class="plan-card">
+            <div class="plan-info">
+              <h4>ConnectX Ultra — 1 Gbps</h4>
+            </div>
+            <div class="plan-price">₹1,999/mo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Interactive Chatbot -->
+    <div class="chat-panel">
+      <!-- Chat Header -->
+      <div class="chat-header">
+        <div class="bot-identity">
+          <div class="bot-avatar">🤖</div>
+          <div>
+            <div class="bot-name">ConnectX Virtual Assistant</div>
+            <div class="bot-subtitle">Scope: Billing, Plans, Outages · Context-Aware Memory</div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn-secondary" id="resetBtn" title="Clear conversation memory">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            Reset Memory
+          </button>
+        </div>
+      </div>
+
+      <!-- Messages Stream -->
+      <div class="chat-messages" id="messagesContainer">
+        <div class="message bot">
+          <span class="msg-sender">ConnectX Assistant</span>
+          <div class="bubble">
+            Hello Priya! 👋 I'm your ConnectX Telecom customer support assistant. I can help you with your account, billing, current plan, available upgrades, and network service status. How can I assist you today?
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Test Scenario Chips -->
+      <div class="chips-section">
+        <span class="chip-label">Test Prompts:</span>
+        <button class="chip-btn" onclick="sendPrompt('What is my current plan and how much do I pay each month?')">Stage 1: Current plan & charges</button>
+        <button class="chip-btn" onclick="sendPrompt('What plan am I on?')">Stage 2 (Turn 1): What plan am I on?</button>
+        <button class="chip-btn" onclick="sendPrompt('Is there a faster option?')">Stage 2 (Turn 2): Is there a faster option?</button>
+        <button class="chip-btn" onclick="sendPrompt('How much more would that cost?')">Stage 2 (Turn 3): How much more?</button>
+        <button class="chip-btn" onclick="sendPrompt('How does ConnectX compare to Airtel\'s pricing?')">Stage 3: Competitor (Airtel)</button>
+        <button class="chip-btn" onclick="sendPrompt('Can you help me write an email to my landlord?')">Stage 3: Personal Advice</button>
+        <button class="chip-btn" onclick="sendPrompt('What\'s the weather like in Mumbai today?')">Stage 3: Unrelated (Weather)</button>
+        <button class="chip-btn" onclick="sendPrompt('When is my next bill due?')">Control: In-Scope Bill Query</button>
+      </div>
+
+      <!-- Input Area -->
+      <div class="chat-input-area">
+        <input type="text" id="userInput" class="input-box" placeholder="Ask about your bill, plans, upgrades, or network outages..." autocomplete="off">
+        <button id="sendBtn" class="btn-send">
+          <span>Send</span>
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const messagesContainer = document.getElementById('messagesContainer');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const backendTag = document.getElementById('backendTag');
+
+    // Fetch initial backend and account info
+    async function init() {
+      try {
+        const res = await fetch('/api/status');
+        if (res.ok) {
+          const data = await res.json();
+          backendTag.textContent = `Backend: ${data.backend} (${data.model})`;
+        }
+      } catch (e) {
+        backendTag.textContent = 'Backend: Local';
+      }
+    }
+    init();
+
+    function appendMessage(sender, text, classification = null) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `message ${sender}`;
+
+      const senderSpan = document.createElement('span');
+      senderSpan.className = 'msg-sender';
+      senderSpan.textContent = sender === 'user' ? 'You (Priya)' : 'ConnectX Assistant';
+      msgDiv.appendChild(senderSpan);
+
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      bubble.textContent = text;
+      msgDiv.appendChild(bubble);
+
+      if (classification && sender === 'bot') {
+        const tag = document.createElement('span');
+        tag.className = `scope-tag tag-${classification}`;
+        tag.textContent = `Router: ${classification}`;
+        msgDiv.appendChild(tag);
+      }
+
+      messagesContainer.appendChild(msgDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+      const ind = document.createElement('div');
+      ind.className = 'typing-indicator';
+      ind.id = 'typingIndicator';
+      ind.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+      messagesContainer.appendChild(ind);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+      const ind = document.getElementById('typingIndicator');
+      if (ind) ind.remove();
+    }
+
+    async function handleSend() {
+      const text = userInput.value.trim();
+      if (!text) return;
+
+      userInput.value = '';
+      sendBtn.disabled = true;
+      userInput.disabled = true;
+
+      appendMessage('user', text);
+      showTypingIndicator();
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+        removeTypingIndicator();
+
+        if (res.ok) {
+          const data = await res.json();
+          appendMessage('bot', data.response, data.classification);
+        } else {
+          appendMessage('bot', "I'm having trouble connecting right now. Please try again or reach out to ConnectX support.");
+        }
+      } catch (err) {
+        removeTypingIndicator();
+        appendMessage('bot', "Network error connecting to support assistant server.");
+      } finally {
+        sendBtn.disabled = false;
+        userInput.disabled = false;
+        userInput.focus();
+      }
+    }
+
+    function sendPrompt(promptText) {
+      userInput.value = promptText;
+      handleSend();
+    }
+
+    sendBtn.addEventListener('click', handleSend);
+    userInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleSend();
+    });
+
+    resetBtn.addEventListener('click', async () => {
+      try {
+        await fetch('/api/reset', { method: 'POST' });
+        messagesContainer.innerHTML = '';
+        appendMessage('bot', 'Conversation memory has been reset. How can I help you today, Priya?');
+      } catch (e) {
+        alert('Failed to reset memory');
+      }
+    });
+  </script>
+</body>
+</html>
